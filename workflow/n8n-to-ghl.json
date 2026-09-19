@@ -1,0 +1,155 @@
+{
+  "name": "n8n to ghl",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "New Lead form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Last Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Address",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone Number",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email address",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company"
+            },
+            {
+              "fieldLabel": "Message",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -192,
+        -128
+      ],
+      "id": "03a38102-d805-487f-bd50-4b612fd6fe33",
+      "name": "On form submission",
+      "webhookId": "aa378241-5ece-46aa-b453-a855017e1166"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/hooks/oX2sO7aRZcNc515nCrAG/webhook-trigger/436d9e98-5374-42d1-bf4c-65b7112175a3",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "First Name",
+              "value": "={{ $json['First Name'] }}"
+            },
+            {
+              "name": "Last Name",
+              "value": "={{ $json['Last Name'] }}"
+            },
+            {
+              "name": "Address",
+              "value": "={{ $json.Address }}"
+            },
+            {
+              "name": "Phone number",
+              "value": "={{ $json['Phone Number'] }}"
+            },
+            {
+              "name": "Email",
+              "value": "={{ $json['Email address'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        208,
+        -128
+      ],
+      "id": "45ceb42e-edef-4ea9-8d91-f9e571016c03",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {},
+      "id": "b7c67106-c196-4340-8eb3-fde12fb87e96",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll"
+      },
+      "id": "54f6e2ff-ef8d-485b-b021-ca800a08b7ef",
+      "name": "GHL Bridge",
+      "type": "n8n-nodes-ghl-bridge.ghlBridge",
+      "typeVersion": 1,
+      "position": [
+        160,
+        96
+      ],
+      "credentials": {
+        "ghlBridgeApi": {
+          "id": "4boto4D5lyjzHT9J",
+          "name": "GHL Bridge account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "GHL Bridge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "99b720cb-c0a8-4a06-ab77-12c889d2e90e",
+  "id": "J5phBBrL7JH8Unce",
+  "tags": [],
+  "pinData": {}
+}
