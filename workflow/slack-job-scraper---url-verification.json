@@ -1,0 +1,93 @@
+{
+  "name": "Slack Job Scraper - URL Verification",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0BTMRWRCG1",
+          "mode": "list",
+          "cachedResultName": "jobs"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -112
+      ],
+      "id": "f68101d2-d3d3-428b-90b0-ce86f587fd15",
+      "name": "Slack Trigger",
+      "webhookId": "77aa9511-f29b-406a-a6fa-740274d950d3",
+      "credentials": {
+        "slackApi": {
+          "id": "1748H88n5qkHfKWy",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "slack-job-scraper",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "60af3b0f-5e34-4d40-b46f-acc8ff427e47",
+      "name": "Slack Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        112,
+        144
+      ],
+      "webhookId": "slack-job-scraper"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"challenge\": $json.body.challenge } }}",
+        "options": {}
+      },
+      "id": "bb147655-8a64-4162-a2c0-e5bfa8eed16d",
+      "name": "Respond to Slack",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        384,
+        144
+      ]
+    }
+  ],
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Slack Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "31cf1049-0ef9-40c6-8f85-990d067b3d63",
+  "id": "3YmTfiRHF9nEmmJT",
+  "tags": [],
+  "pinData": {}
+}
