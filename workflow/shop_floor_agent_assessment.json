@@ -1,0 +1,261 @@
+{
+  "name": "Shop_Floor_Agent_Assessment",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are the Shop-Floor AI Agent for ABC Cabinet.\n\nYour job is to help a shop-floor operator understand a panel and determine whether it can be processed at the selected workstation.\n\nIMPORTANT RULES:\n\n1. Never invent production information.\n2. Panel information must come from the get_panel tool.\n3. Workstation requirements must come from the get_workstation_requirements tool.\n4. SOP instructions must come from the search_sop tool.\n5. If information is missing, unknown, or inconsistent, do not guess.\n6. If the panel does not belong at the selected workstation, tell the operator not to process it and identify the correct workstation when the available data supports this.\n7. Unsupported machine settings, speeds, tooling parameters, or safety procedures must never be invented.\n8. If an issue cannot safely be resolved from available data, use escalate_to_supervisor.\n9. Record important events using record_event.\n10. Provide a concise answer suitable for a shop-floor operator.\n\nWhen answering, include sources when available.\n\nExample:\n\nSource:\n- Panel P-1001\n- SOP - Edge Banding\n\nYou must decide which tools are required instead of following a fixed tool sequence for every request."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -720,
+        -624
+      ],
+      "id": "67cce39c-3af3-4ceb-a705-c48806e3404d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "formTitle": "ABC FORM",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Panel Code"
+            },
+            {
+              "fieldLabel": "WorkStation Id",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "EDGE-01"
+                  },
+                  {
+                    "option": "DRILL-01"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -1104,
+        -624
+      ],
+      "id": "7f017dec-4258-407d-b917-2b233e7ddfc2",
+      "name": "On form submission",
+      "webhookId": "d6485ee0-3779-4d0b-bc45-7e2ef7bdd0ae"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -864,
+        -416
+      ],
+      "id": "39649dda-e4c0-4fe3-ab5f-e76cb3461e45",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "In5U0h3br2f3tdIM",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -736,
+        -416
+      ],
+      "id": "900dbfab-6abd-46b9-9a83-6469173c93ac",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "WWK2Pgeuh2HDEhVv",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/WWK2Pgeuh2HDEhVv",
+          "cachedResultName": "TOOL - Get Workstation2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workstation Id": "={{ $json['WorkStation Id'] }}"
+          },
+          "matchingColumns": [
+            "Workstation Id"
+          ],
+          "schema": [
+            {
+              "id": "Workstation Id",
+              "displayName": "Workstation Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -464,
+        -432
+      ],
+      "id": "0e0cee70-ce55-48a6-929d-74d714c4b132",
+      "name": "TOOL - Get Workstation2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "byBwbFFftin4JgF7",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/byBwbFFftin4JgF7",
+          "cachedResultName": "TOOL - get_panel"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "panel_code": "={{ $json['Panel Code'] }}"
+          },
+          "matchingColumns": [
+            "panel_code"
+          ],
+          "schema": [
+            {
+              "id": "panel_code",
+              "displayName": "panel_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -592,
+        -416
+      ],
+      "id": "64bd8cb4-eefa-472b-9568-8b7874f6ff01",
+      "name": "TOOL - get_panel"
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TOOL - Get Workstation2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TOOL - get_panel": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "86ad01a3-c08e-4ebc-88cf-c4d3ea1059e6",
+  "id": "7IygMRpKFGYR5TGl",
+  "tags": [],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Panel Code": "P-1001",
+          "WorkStation Id": "DRILL-01",
+          "submittedAt": "2026-09-02T11:36:23.758-04:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  }
+}
