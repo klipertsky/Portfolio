@@ -1,0 +1,266 @@
+{
+  "name": "TOOL - Get Workstation2",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Workstation Id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -736,
+        -288
+      ],
+      "id": "398fc1d0-338a-40da-8991-8ffcddd3c28f",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IuoUHXDlDji0IndbNZjoRnn6G9kGL-lN_3ALjbWMyz4",
+          "mode": "list",
+          "cachedResultName": "ABC Cabinet Production Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IuoUHXDlDji0IndbNZjoRnn6G9kGL-lN_3ALjbWMyz4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1156088848,
+          "mode": "list",
+          "cachedResultName": "Workstation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IuoUHXDlDji0IndbNZjoRnn6G9kGL-lN_3ALjbWMyz4/edit#gid=1156088848"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "workstation_id",
+              "lookupValue": "={{ $json['Workstation Id'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -544,
+        -288
+      ],
+      "id": "9a96a13e-fc2d-46ad-b4e1-4988f7eafecf",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "B9kLWCRiWs0ouamt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "955758d3-9dda-406c-abe7-c398eb511f13",
+              "name": "workstation_id",
+              "value": "={{ $json.workstation_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e3384cd0-db85-4335-9c7e-b0b950013305",
+              "name": "workstation_name",
+              "value": "={{ $json.workstation_name }}",
+              "type": "string"
+            },
+            {
+              "id": "13ce04ea-1fd1-434c-9e27-6b4cc0734324",
+              "name": "operation",
+              "value": "={{ $json.operation }}",
+              "type": "string"
+            },
+            {
+              "id": "35541528-2faa-43d1-b80b-a7603645b160",
+              "name": "instructions_source",
+              "value": "={{ $json.instructions_source }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -368,
+        -288
+      ],
+      "id": "682d0d33-e61a-4318-92e1-e440c55daa87",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7ea41ad5-2b5d-4e5f-ac45-4ccedd2e9122",
+              "leftValue": "={{ $json.workstation_name }}",
+              "rightValue": "={{ $json.operation }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -176,
+        -304
+      ],
+      "id": "3df18ccc-da2c-460e-b215-6e47e4159584",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c34d1640-a77e-40f5-800c-af9378cf7985",
+              "name": "workstation_name",
+              "value": "=Wrong Workstation",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        16,
+        -160
+      ],
+      "id": "5a847fd9-5df5-496d-b252-6c0b7b395206",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82f15ba6-b037-4add-93f0-de8b39b546b2",
+              "name": "workstation_id",
+              "value": "={{ $json.workstation_id }}",
+              "type": "string"
+            },
+            {
+              "id": "c41b923e-985c-457a-8125-899634ea7ecb",
+              "name": "workstation_name",
+              "value": "={{ $json.workstation_name }}",
+              "type": "string"
+            },
+            {
+              "id": "a666333a-5f8c-4d24-90ce-7693790d3530",
+              "name": "operation",
+              "value": "={{ $json.operation }}",
+              "type": "string"
+            },
+            {
+              "id": "d48569e4-0667-46d7-ab05-079f7f2902b5",
+              "name": "instructions_source",
+              "value": "={{ $json.instructions_source }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        16,
+        -368
+      ],
+      "id": "67062ab3-efec-438a-8888-92e13bee77a8",
+      "name": "Edit Fields3"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4533dcb3-fa62-43b9-b986-7bf539bec136",
+  "id": "WWK2Pgeuh2HDEhVv",
+  "tags": [],
+  "pinData": {}
+}
