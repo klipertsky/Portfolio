@@ -1,0 +1,740 @@
+{
+  "name": "AI Lead Qualification & Automated Sales Routing",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Contact US",
+        "formDescription": "We'll get back to you soon",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "fieldName": "=",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Address",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone Number",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company"
+            },
+            {
+              "fieldLabel": "Message"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -256,
+        -3280
+      ],
+      "id": "d047b4d8-7474-442a-9c05-c7cd491e3207",
+      "name": "On form submission",
+      "webhookId": "3a824fc2-5930-48b3-871a-a7c2f8ce79d6"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -32,
+        -3008
+      ],
+      "id": "f396c9dc-7056-4f1f-9b15-5c8812e9120e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.properties.customer_type.type }}",
+                    "rightValue": "contractor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "55a61780-f63c-44ec-b09c-40710f0a7686"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Contractor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e6734815-7cc1-416f-90a7-d90f72189963",
+                    "leftValue": "={{ $json.output.properties.customer_type.type }}",
+                    "rightValue": "designer",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Designer"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a2e27bb1-0c48-47ef-bd5b-eeb8cc46736d",
+                    "leftValue": "={{ $json.output.properties.customer_type.type }}",
+                    "rightValue": "homeowner",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Homeowner"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2c0cbaba-23da-43bf-bfe6-f9e8edc240e5",
+                    "leftValue": "={{ $json.output.properties.customer_type.type }}",
+                    "rightValue": "builder",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Builder"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c023d13b-2f8f-4b7f-a20b-b2932e1f9c73",
+                    "leftValue": "={{ $json.output.properties.customer_type.type }}",
+                    "rightValue": "unknown",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "unknown"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        -3328
+      ],
+      "id": "2c034484-b53a-4e04-9272-bd6a0aca568e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "content": "AI Lead Qualification & Automated Sales Routing\n\nBuilt a production-style n8n automation that uses Google Gemini to classify incoming leads, generate structured customer data, route leads to the appropriate salesperson, and automatically generate internal follow-up emails. Integrated Slack notifications for sales visibility and implemented a separate reusable error-handling workflow that logs failures to Google Sheets and alerts the team through Slack/Telegram.",
+        "height": 224,
+        "width": 656,
+        "color": "#C93636"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        -3472
+      ],
+      "typeVersion": 1,
+      "id": "cb673b17-0140-4ba1-b4bc-76596dd72c70",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 816,
+        "width": 1776,
+        "color": "#4A0250"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -336,
+        -3472
+      ],
+      "typeVersion": 1,
+      "id": "2b6a9169-ce4f-4b63-a698-fa824c9ebc23",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a customer classification AI Agent.\n\nYour job is to classify each customer into ONE of these categories:\n\n- homeowner\n- contractor\n- designer\n- builder\n- unknown\n\nAnalyze ONLY the customer information provided.\n\nCustomer Information:\n\nName: {{ $json.Name }}\nAddress: {{ $json.Address }}\nEmail: {{ $json.Email }}\nPhone: {{ $json['Phone Number'] }}\nCompany: {{ $json.Company }}\nMessage: {{ $json.Message }}\n==================================================\nCLASSIFICATION RULES\n==================================================\n\n1. Select ONLY ONE category.\n\n2. Use these definitions:\n\nHOMEOWNER:\nA person looking for products or services for their own home or personal property.\n\nCONTRACTOR:\nA professional or company performing construction, installation, renovation, or similar work for clients.\nExamples: general contractor, installer, electrician, plumber, solar installer, construction contractor.\n\nDESIGNER:\nAn architect, interior designer, kitchen designer, landscape designer, or other professional primarily involved in designing projects.\n\nBUILDER:\nA builder, construction company, developer, or professional/company responsible for building houses, buildings, or other structures.\n\nUNKNOWN:\nUse this when there is not enough information to confidently determine the customer's category.\n\n3. Prioritize the customer's message and company information.\n\n4. Do not guess.\n\n5. If the customer says they are an installer, contractor, or construction professional, classify them as:\ncontractor\n\n6. Return ONLY the following JSON structure.\n\n{\n  \"customer_type\": \"homeowner\",\n  \"confidence\": \"high\",\n  \"reason\": \"Short explanation\"\n}\n\nThe value of \"customer_type\" MUST be exactly one of:\n\nhomeowner\ncontractor\ndesigner\nbuilder\nunknown\n\nThe value of \"confidence\" MUST be exactly one of:\n\nhigh\nmedium\nlow\n\nDo not return multiple categories.\nDo not return markdown.\nDo not include ```json.\nDo not include any additional text.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -64,
+        -3280
+      ],
+      "id": "4fdf1ef6-dcf9-4380-b69a-35c8a340ccc5",
+      "name": "Classification Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"customer_type\": {\n      \"type\": \"string\"\n    },\n    \"confidence\": {\n      \"type\": \"string\"\n    },\n    \"reason\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"customer_type\",\n    \"confidence\",\n    \"reason\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        -3008
+      ],
+      "id": "bfb79c86-f831-4d40-a38e-319152b487fc",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33b19e4a-a8c7-4f0c-90ee-7aa17ef89f28",
+              "name": "{{ $('Classification Agent').item.json.output.properties.customer_type.type }}",
+              "value": "=Chito Miranda",
+              "type": "string"
+            },
+            {
+              "id": "450fcb0b-c235-4c2d-82e1-6a4978019f62",
+              "name": "salesperson_email",
+              "value": "contractor@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "69974e79-10db-49f7-a73e-22933a32d829",
+              "name": "salesperson",
+              "value": "Chito Miranda",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        496,
+        -3424
+      ],
+      "id": "b3fa2b7b-7f03-4eaf-b585-dc6646ee3070",
+      "name": "Contractor"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33b19e4a-a8c7-4f0c-90ee-7aa17ef89f28",
+              "name": "={{ $('Classification Agent').item.json.output.properties.customer_type.type }}",
+              "value": "=Francis Magalona",
+              "type": "string"
+            },
+            {
+              "id": "ed8ea0d2-51b9-49f4-ac29-cbe89ea5cf00",
+              "name": "salesperson_email",
+              "value": "homeowner@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "d6e20865-c05d-4d62-b8ec-89dd98b3b8b4",
+              "name": "salesperson",
+              "value": "Francis Magalona",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        496,
+        -3152
+      ],
+      "id": "6d5b227c-d8da-4dcd-b858-322f2e41d35e",
+      "name": "Homeowner"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33b19e4a-a8c7-4f0c-90ee-7aa17ef89f28",
+              "name": "={{ $('Classification Agent').item.json.output.properties.customer_type.type }}",
+              "value": "=Flow g",
+              "type": "string"
+            },
+            {
+              "id": "d9059d42-84ae-4865-8e79-801ff19493bb",
+              "name": "salesperson_email",
+              "value": "builder4@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "06676fd9-5093-4833-b9fa-36f2dde112e7",
+              "name": "salesperson",
+              "value": "Flow g",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        496,
+        -3024
+      ],
+      "id": "294ad1a8-b33b-47a4-9c78-dacdb2755324",
+      "name": "Builder"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BUEA0EL2C",
+          "mode": "list",
+          "cachedResultName": "all-trial-n8n"
+        },
+        "text": "=Hi team,\n\nPlease follow up this lead.\n \nName: {{ $('On form submission').item.json.Name }}\nEmail: {{ $('On form submission').item.json.Email }}\nPhone: {{ $('On form submission').item.json['Phone Number'] }}\nCompany: {{ $('On form submission').item.json.Company }}\nMessage:{{ $('On form submission').item.json.Message }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        496,
+        -2848
+      ],
+      "id": "efaff80c-2211-483d-b5a5-fe0f415a2107",
+      "name": "Follow up lead",
+      "webhookId": "fce2c7c2-75c6-47d0-adaf-927677b0093a",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "sh8xoK528p6avBGJ",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an Internal Sales Lead Notification Agent.\n\nYour ONLY purpose is to notify the assigned salesperson about a new customer lead.\n\nIMPORTANT:\nThis email MUST be sent to the ASSIGNED SALESPERSON.\n\nThe customer is NEVER the recipient of this email.\n\nThe customer's email address is provided only as contact information for the salesperson.\n\nDO NOT send the email to:\n- Customer Email\n- Customer\n- Customer Name\n- Any email address belonging to the customer\n\nThe recipient must ALWAYS be the value provided in:\nsalesperson_email\n\n## INPUT DATA\n\nThe workflow may provide:\n\nCustomer information:\n- customer_name\n- customer_email\n- customer_phone\n- company\n- customer_type\n- confidence\n- reason\n- message\n\nSalesperson information:\n- {{ $json.salesperson }}\n- {{ $json.salesperson_email }}\n\n## RECIPIENT RULE\n\nThe email recipient MUST be:\n\n{{ $json.salesperson_email }}\n\nNEVER use:\n\n{{ $json.customer_email }}\n\nas the recipient.\n\nThe customer's email should ONLY appear inside the Customer Information section.\n## EMAIL FORMAT\n\nThe email must be formatted as HTML.\n\nDo NOT use Markdown.\n\nDo NOT use:\n- ###\n- **\n- Markdown tables\n- Markdown links\n\nUse HTML tags for formatting.\n\nUse:\n- <h2> for major sections\n- <p> for paragraphs\n- <strong> for labels\n- <ul> and <li> for lists\n- <hr> for separators\n- <br> for line breaks\n\nCreate a clean, professional internal sales notification email.\n\nThe output must contain ONLY the HTML email body.\n\nDo not include:\n- ```html\n- ``` \n- explanations\n- comments about the formatting\n## EMAIL SUBJECT\n\nUse:\n\nNew Lead Follow-Up Required - {{ $('On form submission').item.json.Name }} - {{ $('Classification Agent').item.json.output.properties.customer_type.type }}\n\nExample:\n\nNew Lead Follow-Up Required - Klipert Tedlos - Homeowner\n\n## EMAIL BODY\n\nHello {{ $json.salesperson }},\n\nA new lead has been received and requires your follow-up.\n\n### Customer Information\n\nName: {{ $('On form submission').item.json.Name }}\nEmail: {{ $('On form submission').item.json.Email }}\nPhone: {{ $('On form submission').item.json['Phone Number'] }}\nCompany: {{ $('On form submission').item.json.Company }}\n\n### Lead Classification\n\nCustomer Type: {{ $('Classification Agent').item.json.output.properties.customer_type.type }}\nConfidence: {{ $('Classification Agent').item.json.output.properties.confidence.type }}\nReason: {{ $('Classification Agent').item.json.output.properties.reason.type }}\n\n### Customer Inquiry\n\n{{ $('On form submission').item.json.Message }}\n\n### Recommended Action\n\nPlease review the customer's inquiry and contact the customer directly using the contact information above.\n\nPlease follow up with the customer to discuss their requirements and provide the appropriate assistance.\n\nRegards,\n\nLead Management Automation\n\n## IMPORTANT RULES\n\n1. This is an INTERNAL email to the salesperson.\n2. The salesperson is the recipient.\n3. The customer is NOT the recipient.\n4. Never send this email to the customer's email address.\n5. Never address the email to the customer.\n6. Do not respond to the customer's inquiry directly.\n7. Do not pretend to be the salesperson.\n8. Do not invent salesperson information.\n9. Use the salesperson_email supplied by the workflow.\n10. Keep the customer's email and phone number only as contact information for the salesperson.\n11. Do not mention n8n, AI, prompts, nodes, or workflow internals.\n\nIf salesperson_email is missing, DO NOT guess an email address.\nInstead, return an error indicating that the salesperson email is missing. ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        736,
+        -3264
+      ],
+      "id": "295e003a-4147-4853-a7a6-64f8a59ee90d",
+      "name": "Email agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33b19e4a-a8c7-4f0c-90ee-7aa17ef89f28",
+              "name": "={{ $('Classification Agent').item.json.output.properties.customer_type.type }}",
+              "value": "=Gloc 9",
+              "type": "string"
+            },
+            {
+              "id": "336544e5-6c64-4e4f-b4ca-373b567ea1d0",
+              "name": "salesperson_email",
+              "value": "designeremail@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "66b99622-9497-402f-82c3-7ec3da2671bd",
+              "name": "salesperson",
+              "value": "Gloc 9",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        496,
+        -3296
+      ],
+      "id": "df65912c-5ca9-4a7a-b5a5-a16599d665b1",
+      "name": "Designer"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        -3072
+      ],
+      "id": "5161d6e2-9d71-4f06-9d5a-5d1698d0e71c",
+      "name": "model - email agent",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OwxwVsUweqqGV6Pj",
+          "name": "klipertskfreelance"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -192,
+        -3008
+      ],
+      "id": "3b593cca-6da1-4aeb-868e-737ab736a208",
+      "name": "model - classification agent",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "In5U0h3br2f3tdIM",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "klipertsky@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        -3056
+      ],
+      "id": "b0fdcdea-c513-4db9-bd40-d846c694179e",
+      "name": "Send a message in Gmail",
+      "webhookId": "c1a4c92e-bf25-4141-b278-b2122f3a74de",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Key capabilities\n\n🤖 AI Qualification — Automatically understands and categorizes customer inquiries.\n\n🔀 Intelligent Routing — Sends each lead to the appropriate salesperson.\n\n✉️ Automated Communication — Generates professional internal sales notifications.\n\n💬 Team Visibility — Notifies the sales team through Slack.\n\n🛡️ Error Handling — Uses a separate workflow to capture, log, and report automation failures.\n\n👨‍💼 Human-in-the-Loop — AI handles qualification and routing while the salesperson handles the actual customer relationship.\n\n",
+        "height": 448,
+        "width": 656,
+        "color": "#723154"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        -3216
+      ],
+      "typeVersion": 1,
+      "id": "06a90228-f25b-4985-8869-9d03b4162ef0",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Technology Stack\n\nn8n · Google Gemini · Gmail · Slack · Telegram · Google Sheets · AI Agents · Structured Output Parser · Switch/Conditional Routing · Error Trigger",
+        "height": 128,
+        "width": 656,
+        "color": "#3F3F4B"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        -2736
+      ],
+      "typeVersion": 1,
+      "id": "7a48c9db-96f6-4f45-b043-5cac2833d119",
+      "name": "Sticky Note3"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Classification Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Classification Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Contractor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Designer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Homeowner",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Builder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Follow up lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classification Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Classification Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contractor": {
+      "main": [
+        [
+          {
+            "node": "Email agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Homeowner": {
+      "main": [
+        [
+          {
+            "node": "Email agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Builder": {
+      "main": [
+        [
+          {
+            "node": "Email agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email agent": {
+      "main": [
+        []
+      ]
+    },
+    "Designer": {
+      "main": [
+        [
+          {
+            "node": "Email agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model - email agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model - classification agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classification Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "f7ehURgb2ogaERIw",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "ac851aca-adab-43e9-b204-b730962a77fc",
+  "id": "hjJ7UOWnUCajdOI8",
+  "tags": [],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Name": "klipert tedlos",
+          "Address": "san manuel, palawan",
+          "Email": "klipertsky@gmail.com",
+          "Phone Number": 9913234694,
+          "Company": "thinkpad",
+          "Message": "hello, do you have solar panel, I want to improve my home electric bill.",
+          "submittedAt": "2026-08-29T08:07:46.073-04:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  }
+}
