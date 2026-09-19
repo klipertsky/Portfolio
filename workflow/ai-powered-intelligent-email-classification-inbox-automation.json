@@ -1,0 +1,656 @@
+{
+  "name": "AI-Powered Intelligent Email Classification & Inbox Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 5
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1552,
+        96
+      ],
+      "id": "acf91fe3-1727-4e0d-b840-0b39884bea1a",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1328,
+        96
+      ],
+      "id": "506ad11d-7d1e-4762-a868-7b072243ddb4",
+      "name": "Get a message",
+      "webhookId": "d0e18605-a76d-4255-9dfc-7cd1bb25503f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf32761c-9aa8-40ed-91d3-3b03f1d695ee",
+              "name": "From",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            },
+            {
+              "id": "03d0c1f5-d81d-4564-bbe7-5011db17ce1a",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "56673d82-da40-48c6-a7e6-8c40fe278ad4",
+              "name": "snippet",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1104,
+        96
+      ],
+      "id": "c9f69d81-6d9b-4cfd-8a9c-3e45b1119548",
+      "name": "Prepare email"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.snippet }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are an email classification system.\n\nClassify the email into exactly ONE of these categories:\n\nJOBS\nPERSONAL\nSHOPPING\nPROMO\nNEWSLETTER\nGENERAL\n\nDefinitions:\n\nJOBS = employment, recruiters, interviews, job applications,\nhiring, careers and job opportunities.\n\nPERSONAL = friends, family and personal communication.\n\nSHOPPING = purchases, orders, receipts, shipping,\ndeliveries and e-commerce promotions.\n\nPROMO = promo, promos, contest, giveaways, offers.\n\nNEWSLETTER = newsletters, subscriptions, mailing lists,\nmarketing and recurring promotional emails.\n\nGENERAL = anything that does not clearly fit another category.\n\nAnalyze the sender, subject and body.\n\nthe OUTPUT:\n{\n  \"category\": \"\",\n  \"confidence\": ,\n  \"reason\": \".\"\n}\n\nThe category must be exactly one of the allowed categories.\nConfidence must be a number from 0 to 1.\nReason must briefly explain the classification.\n\nEMAIL:\n\nSender:\n{{ $json.From }}\n\nSubject:\n{{ $json.Subject }}\n\nBody:\n{{ $json.snippet }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -880,
+        96
+      ],
+      "id": "ea804eb9-f370-403e-a6ba-d84e27cb7f59",
+      "name": "Basic LLM Chain",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "48092bcf-5653-451c-83a4-95a80d1284a4",
+              "leftValue": "={{ $json.output.confidence }}",
+              "rightValue": 0.85,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -528,
+        96
+      ],
+      "id": "39920cd1-caca-48f4-a1e5-2525bd6acfe8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -872,
+        328
+      ],
+      "id": "0aa64b04-f798-40a1-94c6-77ed9bbc7780",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OwxwVsUweqqGV6Pj",
+          "name": "klipertskfreelance"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"category\": \"JOBS\",\n\t\"confidence\": 1,\n  \"reason\": \"this letter contains application\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -744,
+        328
+      ],
+      "id": "f5c7c367-0f7e-419c-9369-2c029bfa5682",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "JOBS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "3dc7ce18-1084-495e-8ab5-5b76849eb2ad"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "jobs"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a1249a52-87a3-4bd2-8c35-50e04267cdba",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "PERSONAL",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "personal"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0926867c-8f66-439f-9173-e944e1cd2037",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "SHOPPING",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "shopping"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "445f15a0-fbf6-43fa-b47b-7c9edefc042c",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "PROMO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "promo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "830919de-015a-4a92-9149-c897088123d9",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "NEWSLETTER",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "newsletter"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b8446c09-4eba-421a-836f-f4531b451ace",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "GENERAL",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "general"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -304,
+        -96
+      ],
+      "id": "c9929113-a2a1-43bc-ac61-504dd2c80e68",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "CATEGORY_PROMOTIONS"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        64
+      ],
+      "id": "3f66c191-41d1-4f9b-9b60-314499b16ce7",
+      "name": "label PROMO",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_8660036913594067566",
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -512
+      ],
+      "id": "3bc8df96-572e-48eb-bfae-5a1f09b8807e",
+      "name": "label JOBS",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "CATEGORY_PERSONAL",
+          "Label_3",
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -320
+      ],
+      "id": "458ccf3a-3608-4a20-ba93-b4b71bacbf58",
+      "name": "label PERSONAL",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_3728626876127936073"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        256
+      ],
+      "id": "7b31bfde-3853-4250-bc53-5270e04effb0",
+      "name": "label NEWSLETTER",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_6221733182456096750",
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        448
+      ],
+      "id": "c9b07d22-8214-4f2c-b17e-b9114f088ee4",
+      "name": "label GENERAL",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_7664060589833982603"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -128
+      ],
+      "id": "2a5184cf-9a54-439e-9f25-2ceabcb0e0da",
+      "name": "label SHOPPING",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_8749381527411178611",
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        224
+      ],
+      "id": "98c4a04a-592e-442b-92b0-555b35b71d3d",
+      "name": "REVIEW INBOX",
+      "webhookId": "71e26058-edab-438b-b7de-3007af4a1f13",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "Prepare email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare email": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "REVIEW INBOX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "label JOBS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "label PERSONAL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "label SHOPPING",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "label PROMO",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "label NEWSLETTER",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "label GENERAL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "f7ehURgb2ogaERIw",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "638b76d3-8a8d-4273-bcef-af1cbe2ccf7e",
+  "id": "QxGyUJohkQgmwgsp",
+  "tags": [],
+  "pinData": {}
+}
