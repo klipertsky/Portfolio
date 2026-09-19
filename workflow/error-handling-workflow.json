@@ -1,0 +1,159 @@
+{
+  "name": "Error Handling Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -304
+      ],
+      "id": "23dbe41f-d650-4b72-95aa-398b8034883d",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1sizDcRKjSX2OBduZEn2jDLIt9Yi_EeKROElx3qWbpKs",
+          "mode": "list",
+          "cachedResultName": "Error Logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sizDcRKjSX2OBduZEn2jDLIt9Yi_EeKROElx3qWbpKs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sizDcRKjSX2OBduZEn2jDLIt9Yi_EeKROElx3qWbpKs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.format('yyyy-MM-dd hh:mma') }}",
+            "Workflow": "={{ $json.workflow.name }}",
+            "Node": "={{ $json.execution.lastNodeExecuted }}",
+            "URL": "={{ $json.execution.url }}",
+            "Error Message": "={{ $json.execution.error.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Node",
+              "displayName": "Node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        192,
+        -352
+      ],
+      "id": "0185b0e6-50fc-4ec0-b06a-6ac678fdaf28",
+      "name": "Error log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "B9kLWCRiWs0ouamt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "6885829963",
+        "text": "=Hi we have an Error!\n{{ $json.execution.error.message }}\n{{ $json.workflow.name }}\n{{ $json.execution.url }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        -64
+      ],
+      "id": "08010fc8-d52c-4d25-8b96-4c14a9c5a14c",
+      "name": "Notify on Telegram",
+      "webhookId": "ecd00fb0-eb8d-4d7d-af70-df38bece5450",
+      "credentials": {
+        "telegramApi": {
+          "id": "YWX1PvfiMDyLFDNr",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Error log",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify on Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "abdb4846-4117-4a5f-a5a7-48b82ea8ec14",
+  "id": "f7ehURgb2ogaERIw",
+  "tags": [],
+  "pinData": {}
+}
