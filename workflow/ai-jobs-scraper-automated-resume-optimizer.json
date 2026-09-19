@@ -1,0 +1,922 @@
+{
+  "name": "AI Jobs Scraper + Automated Resume Optimizer",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -1376,
+        -2400
+      ],
+      "id": "04f16879-783f-47e7-989b-34b35da605de",
+      "name": "Telegram Trigger",
+      "webhookId": "b8238ab8-f87b-4f01-aa53-b31e4a6ea670",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFCEPXCiF54u3F5L",
+          "name": "klipertsky"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an AI agent tasked with determining whether the following user query is related to searching for a job: \"{{ $json.message.text }}\". Analyze the query for keywords, phrases, or context that indicate a job search, such as terms like \"job,\" \"career,\" \"employment,\" \"hiring,\" \"position,\" \"vacancy,\" \"apply,\" \"resume,\" or specific job titles. Also consider questions about job applications, interviews, or job requirements. If the query indicates a job search, return the text \"YES\". If the query is unrelated to a job search, return \"NO\". Provide only the response without additional explanation.\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        -928,
+        -2400
+      ],
+      "id": "c3c3db52-24e6-4e60-bd54-6feb23bf5111",
+      "name": "check valid query",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fg5ajqt2qUj0dp3o",
+          "name": "biyaya"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Searching '{{ $('Telegram Trigger').item.json.message.text }}' Jobs ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -576,
+        -2096
+      ],
+      "id": "c0a9a5d5-9fbe-4b0c-acd2-ca3fde9dcf46",
+      "name": "Send Searching for Jobs",
+      "webhookId": "0cd9de7b-9bc3-42c0-9544-07b617d03d81",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFCEPXCiF54u3F5L",
+          "name": "klipertsky"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "Invalid Query / Nothing Found",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        -1920
+      ],
+      "id": "fbb355db-21b5-4273-8c76-439dc4deaacd",
+      "name": "Invalid Query",
+      "webhookId": "2fc471ad-53d2-477d-a5e0-61f1b03f5944",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFCEPXCiF54u3F5L",
+          "name": "klipertsky"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "30c44132-5d70-428c-9d25-0356d180f264",
+              "leftValue": "={{ $json.content.parts[0].text }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -576,
+        -2400
+      ],
+      "id": "c160cf14-dab9-43bd-92fd-2e15943a2ccd",
+      "name": "query is valid?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2ccdf150-5520-4994-9952-bc5d478502e4",
+              "leftValue": "={{ $json.message.chat.id }}",
+              "rightValue": 6885829963,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1152,
+        -2400
+      ],
+      "id": "6c9a8410-dd59-43d1-a3d1-faa3170b6a01",
+      "name": "challenge"
+    },
+    {
+      "parameters": {
+        "url": "https://jsearch.p.rapidapi.com/search-v2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}"
+            },
+            {
+              "name": "num_pages",
+              "value": "1"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "date_posted",
+              "value": "3days"
+            },
+            {
+              "name": "work_from_home",
+              "value": "true"
+            },
+            {
+              "name": "job_requirements",
+              "value": "FULLTIME, CONTRACTOR, PARTTIME"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "jsearch.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "6d08d7ef9fmshc7901d096699562p1a2f01jsnf7b5aa31ba65"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -352,
+        -2096
+      ],
+      "id": "3d3d11fa-7740-4149-8d71-903fd465b76b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "15ab4fca-9c18-48ab-8fed-5425e86c8fe0",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -128,
+        -2096
+      ],
+      "id": "f4d3390e-b4ee-46c2-bf56-fceb4473ad02",
+      "name": "check result"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data.jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -2144
+      ],
+      "id": "2e6cb241-e46a-466f-bcf7-ba003ad70f14",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        320,
+        -2144
+      ],
+      "id": "2445f436-cb9c-4867-a062-0c16b77e91c9",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1elZgAXKfweMOoTZk2N5tYH4VnBBiaUiUqBg3tLAGJGk",
+        "simple": false
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        544,
+        -2144
+      ],
+      "id": "b40773ec-8616-4f49-8e79-f9b371ac8c6b",
+      "name": "get resume content",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "6tiAWi12fuJd9zmg",
+          "name": "klipertsky"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.content }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert resume analyst, ATS optimization specialist, and job-application assistant.  \nYour job is to take a resume, a job title, and a job description, then generate tailored outputs following strict rules.\n\n---------------------------------------\nINPUTS YOU WILL USE\n---------------------------------------\n\nJOB TITLE:\n{{ $('Loop Over Items').item.json.job_title }}\n\nRESUME CONTENT:\n{{ $json.body.content }}\n\nJOB DESCRIPTION:\n{{ $('Loop Over Items').item.json.job_description }}\n\nJOB POST URL:\n{{ $('Loop Over Items').item.json.job_apply_link }}\n\n---------------------------------------\nTASKS\n---------------------------------------\n\n1. Compare the resume to the job post and job title.\n2. Rewrite the resume content to be ATS-friendly** and highly optimized for the given job post.  \n   - Incorporate keywords from the job description.  \n   - Keep wording professional, concise, and quantifiable when possible.  \n   - Do NOT fabricate experience; strengthen what exists.  \n   - Split the new resume content into these sections, **in paragraph format**, but use **bullets where clarity is needed**:  \n     - `\"ProfessionalSummary\"`: 2–4 sentences summarizing expertise and value.  \n     - `\"CoreSkills\"`: Present as a short paragraph, then optionally list key skills with bullets.  \n     - `\"listOfProjects\"`: Describe projects in short paragraphs, include bullets for key achievements or outcomes.  \n     - `\"ProfessionalExperience\"`: Summarize each role in paragraph format, adding bullets for main responsibilities and measurable achievements.\n\n3. Check if the job post includes an email address.\n   - If yes, create a polished email application draft including:  \n     - `\"draftEmailAddress\"`  \n     - `\"draftEmailSubject\"`  \n     - `\"draftEmailBody\"`\n\n4. Check if the job post url contains an Upwork job link.\n   - If yes, write a compelling Upwork proposal tailored to the job:  \n     - `\"jobProposalforUpwork\"`\n\n5. Return all results strictly in this JSON format with no extra text:\n\n{\n  \"newResumeContent\": {\n    \"ProfessionalSummary\": \"\",\n    \"CoreSkills\": \"\",\n    \"listOfProjects\": \"\",\n    \"ProfessionalExperience\": \"\"\n  },\n  \"jobProposalforUpwork\": \"\",\n  \"draftEmailAddress\": \"\",\n  \"draftEmailSubject\": \"\",\n  \"draftEmailBody\": \"\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        768,
+        -2144
+      ],
+      "id": "2614eda1-064a-4259-a951-39e8c50b9189",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"newResumeContent\": {\n    \"ProfessionalSummary\": \"\",\n    \"CoreSkills\": \"\",\n    \"listOfProjects\": \"\",\n    \"ProfessionalExperience\": \"\"\n  },\n  \"jobProposalforUpwork\": \"\",\n  \"draftEmailAddress\": \"\",\n  \"draftEmailSubject\": \"\",\n  \"draftEmailBody\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        -1920
+      ],
+      "id": "818d82b2-e19d-43fd-a663-a6f0108b5daa",
+      "name": "Structured Output Parser",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": "nvidia/nemotron-3.5-lightning:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -1920
+      ],
+      "id": "7d54cc45-50dc-4404-85bb-d5e047434a37",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "gLAzglo0l0GrkDbi",
+          "name": "Kokey"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=Resume for  {{ $('Loop Over Items').item.json.job_title }} - {{ $now.toFormat('MMDD') }}",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        -2144
+      ],
+      "id": "22c559e3-7e58-4ab6-98fd-376eac8d1da8",
+      "name": "Search files and folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "N8Ol6syfz1JC5eOw",
+          "name": "Klipertsky n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "190c51ac-1ec6-4bbd-9bd0-78b8574e8d89",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        -2144
+      ],
+      "id": "326449b7-5f35-49e6-a7a4-6cbbe07bbfd8",
+      "name": "Resume Exist"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        -2144
+      ],
+      "id": "a6736a62-0b03-492c-a7b3-5ae9d672eb96",
+      "name": "Wait",
+      "webhookId": "d7cd8a77-2e03-4d8d-a1a9-a2cb84e8276d"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1QCX0K9a3eP-iMoQ4rAfpOrCQONX_xHiQdcldQNuugQw",
+          "mode": "list",
+          "cachedResultName": "klipert resume template",
+          "cachedResultUrl": "https://docs.google.com/document/d/1QCX0K9a3eP-iMoQ4rAfpOrCQONX_xHiQdcldQNuugQw/edit?usp=drivesdk"
+        },
+        "name": "=Resume for  {{ $('Loop Over Items').item.json.job_title }} - {{ $now.toFormat('MMDD') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1936,
+        -2064
+      ],
+      "id": "69617f1e-333a-41d9-af9e-83606de28cde",
+      "name": "Copy Resume",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "N8Ol6syfz1JC5eOw",
+          "name": "Klipertsky n8n"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2160,
+        -2064
+      ],
+      "id": "5c022a9c-cf18-4657-995f-45a203fef85a",
+      "name": "Wait1",
+      "webhookId": "7388cc37-770d-40c9-8615-caa157b00650"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $('Copy Resume').item.json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{{ProfessionalSummary}}",
+              "replaceText": "={{ $('AI Agent').item.json.output.newResumeContent.ProfessionalSummary }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{CoreSkills}}",
+              "replaceText": "={{ $('AI Agent').item.json.output.newResumeContent.CoreSkills }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{listOfProjects}}",
+              "replaceText": "={{ $('AI Agent').item.json.output.newResumeContent.listOfProjects }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{ProfessionalExperience}}",
+              "replaceText": "={{ $('AI Agent').item.json.output.newResumeContent.ProfessionalExperience }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2384,
+        -2064
+      ],
+      "id": "3c5b0195-cba4-41de-97d0-721b93d36e47",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "6tiAWi12fuJd9zmg",
+          "name": "klipertsky"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "abc4c1af-7512-4fb6-93bf-6dcd2a2f9dd9",
+              "leftValue": "={{ $('AI Agent').item.json.output.draftEmailAddress }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2608,
+        -2064
+      ],
+      "id": "e014c905-a565-49bd-8045-1f41feafdea3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $('AI Agent').item.json.output.draftEmailSubject }}",
+        "message": "={{ $('AI Agent').item.json.output.draftEmailBody }}",
+        "options": {
+          "sendTo": "={{ $('AI Agent').item.json.output.draftEmailAddress }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2832,
+        -2064
+      ],
+      "id": "c3671e08-b06f-4074-b517-56e7be863aa9",
+      "name": "Create a draft",
+      "webhookId": "872a09ef-fb6b-4a7b-a7a9-f0ec6b92d1f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WBDYhr3pS9ilDLqq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Job Title: {{ $('Loop Over Items').item.json.job_title }}\nJob Application Link: {{ $('Loop Over Items').item.json.job_apply_link }}\nOptimized resume:\nhttps://docs.google.com/document/d/{{ $('Update a document').item.json.documentId }}\n\n{{ $('AI Agent').item.json.output.jobProposalforUpwork }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3056,
+        -2064
+      ],
+      "id": "3a311927-6075-4bde-8d8c-43e4ff851164",
+      "name": "Send a text message",
+      "webhookId": "25c8dcda-a300-42c0-bd6d-ad3221ec33b9",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFCEPXCiF54u3F5L",
+          "name": "klipertsky"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 336,
+        "width": 1136
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1488,
+        -2496
+      ],
+      "typeVersion": 1,
+      "id": "1b21a65f-5a9d-48a3-816e-f994ad54fb61",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 384,
+        "width": 2320,
+        "color": "#EC7979"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -624,
+        -2160
+      ],
+      "typeVersion": 1,
+      "id": "a417f2fa-016e-4200-9c85-72dee6181785",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 368,
+        "width": 1408,
+        "color": "#067F56"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1824,
+        -2144
+      ],
+      "typeVersion": 1,
+      "id": "bc8ae4ef-448c-4427-bea5-240e9003b077",
+      "name": "Sticky Note2"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "challenge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check valid query": {
+      "main": [
+        [
+          {
+            "node": "query is valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "query is valid?": {
+      "main": [
+        [
+          {
+            "node": "Send Searching for Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "challenge": {
+      "main": [
+        [
+          {
+            "node": "check valid query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Send Searching for Jobs": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "check result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check result": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "get resume content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get resume content": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Resume Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume Exist": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Copy Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Resume": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "eff86794-88c6-4382-add5-6b8dcae51ee7",
+  "id": "xume8hlVFZa5mKLV",
+  "tags": [],
+  "pinData": {}
+}
