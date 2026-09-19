@@ -1,0 +1,101 @@
+{
+  "name": "TOOL - Search SOP2",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "SOP Id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -256,
+        -128
+      ],
+      "id": "0d811fad-ddd2-4404-a192-d8751f0b7945",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const sops = [\n  {\n    title: \"SOP - Edge Banding\",\n    keywords: [\"edge\", \"banding\"],\n    content:\n      \"Verify the panel code and confirm the required operation is Edge Banding before processing.\",\n    source: \"SOP - Edge Banding\"\n  },\n  {\n    title: \"SOP - Drilling\",\n    keywords: [\"drill\", \"drilling\"],\n    content:\n      \"Verify the panel code and confirm the required operation is Drilling before processing.\",\n    source: \"SOP - Drilling\"\n  }\n];\n\nconst query = ($json.query || \"\").toLowerCase();\n\nconst results = sops.filter(sop =>\n  sop.keywords.some(keyword => query.includes(keyword))\n);\n\nreturn [{\n  json: {\n    found: results.length > 0,\n    results,\n    source: \"SOP Knowledge Base\"\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        -32
+      ],
+      "id": "fad83f80-b089-4d0d-8a0b-b01fa23a7434",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IuoUHXDlDji0IndbNZjoRnn6G9kGL-lN_3ALjbWMyz4",
+          "mode": "list",
+          "cachedResultName": "ABC Cabinet Production Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IuoUHXDlDji0IndbNZjoRnn6G9kGL-lN_3ALjbWMyz4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 714844013,
+          "mode": "list",
+          "cachedResultName": "SOP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IuoUHXDlDji0IndbNZjoRnn6G9kGL-lN_3ALjbWMyz4/edit#gid=714844013"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Content",
+              "lookupValue": "query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -32,
+        -128
+      ],
+      "id": "5dc43ea5-5bb4-405d-9936-4bf1076c7178",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "B9kLWCRiWs0ouamt",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "48ccbfbc-3cd7-439e-a399-7c4770754c72",
+  "id": "dsdB2zu2wgTGEJy8",
+  "tags": [],
+  "pinData": {}
+}
