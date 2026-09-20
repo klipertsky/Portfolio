@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klipert Tedlos — GoHighLevel &amp; AI Automation Specialist</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="apple-touch-icon" href="images/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -51,6 +53,19 @@
     pointer-events:none;
     z-index:0;
     mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
+  }
+
+  #dataStream{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    pointer-events:none;
+    display:block;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #dataStream{ display:none; }
   }
 
   .wrap{
@@ -107,10 +122,10 @@
     letter-spacing:0.02em;
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:10px;
   }
   .nav-logo-img{
-    height:30px; width:30px;
+    height:44px; width:44px;
     object-fit:contain;
     border-radius:6px;
     flex-shrink:0;
@@ -179,6 +194,8 @@
     display:inline-flex;
     align-items:center;
     gap:8px;
+    border:none;
+    cursor:pointer;
     transition:transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
   }
   .btn-primary{
@@ -327,6 +344,8 @@
   }
   .info-list li span:first-child{ color:var(--text-faint); }
   .info-list li span:last-child{ color:var(--text); text-align:right; }
+  .info-list li span:last-child a{ color:var(--teal); text-decoration:none; }
+  .info-list li span:last-child a:hover{ text-decoration:underline; }
 
   /* ---------- SKILLS ---------- */
   .skill-groups{
@@ -383,6 +402,64 @@
     background:linear-gradient(180deg, rgba(45,212,191,0.07), var(--bg-panel) 46%);
     box-shadow:0 0 0 1px rgba(45,212,191,0.12), 0 24px 60px -30px rgba(45,212,191,0.35);
   }
+
+  /* ---------- PROJECT CAROUSEL ---------- */
+  .carousel-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:26px;
+  }
+  .carousel-tab{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--text-dim);
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    padding:9px 16px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .carousel-tab:hover{ border-color:var(--teal-dim); color:var(--text); }
+  .carousel-tab.active{
+    background:var(--teal);
+    border-color:var(--teal);
+    color:#08110F;
+    font-weight:500;
+  }
+  .carousel-slide{ display:none; }
+  .carousel-slide.active{ display:block; animation:slideIn 0.25s ease; }
+  @keyframes slideIn{
+    from{ opacity:0; transform:translateY(6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .carousel-arrows{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    margin-top:24px;
+  }
+  .carousel-arrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--text-dim);
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    padding:9px 18px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:border-color 0.2s, color 0.2s;
+  }
+  .carousel-arrow:hover{ border-color:var(--teal-dim); color:var(--text); }
+  .carousel-counter{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-faint);
+    min-width:44px;
+    text-align:center;
+  }
   .featured-badge{
     display:inline-block;
     font-family:'IBM Plex Mono', monospace;
@@ -417,6 +494,11 @@
   .case-study-btn:hover{
     border-color:var(--teal);
     background:rgba(45,212,191,0.08);
+  }
+  .button-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
   }
 
   /* ---------- IMAGE MODAL / LIGHTBOX ---------- */
@@ -453,6 +535,72 @@
     cursor:pointer;
   }
   .modal-close:hover{ color:var(--text); border-color:var(--teal-dim); }
+
+  /* ---------- BOOKING MODAL ---------- */
+  .booking-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(6,8,12,0.92);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:110;
+  }
+  .booking-overlay.open{ display:flex; }
+  .booking-box{
+    width:min(480px, 94vw);
+    height:min(760px, 88vh);
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .booking-box-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .booking-box-header span{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+  }
+  .booking-close{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    background:var(--bg-panel-2);
+    border:1px solid var(--line);
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .booking-close:hover{ color:var(--text); border-color:var(--teal-dim); }
+  .booking-frame{
+    flex:1 1 auto;
+    width:100%;
+    border:none;
+    background:#fff;
+  }
+  .booking-fallback{
+    padding:9px 18px;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--text-faint);
+    border-top:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .booking-fallback a{ color:var(--teal); text-decoration:none; }
+  .booking-fallback a:hover{ text-decoration:underline; }
   .project-head{
     display:flex;
     justify-content:space-between;
@@ -598,12 +746,144 @@
     color:var(--text-faint);
   }
 
+  /* ---------- RICH CASE-STUDY COMPONENTS ---------- */
+  .meta-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+    margin-bottom:20px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  @media (max-width:760px){ .meta-grid{ grid-template-columns:1fr; } }
+  .meta-grid > div{ display:flex; flex-direction:column; gap:4px; }
+  .meta-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--text-faint);
+  }
+  .meta-value{ font-size:13.5px; color:var(--text-dim); }
+
+  .subsection-h4{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--teal);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin:22px 0 8px;
+    font-weight:500;
+  }
+  .subsection-h4:first-of-type{ margin-top:0; }
+
+  .mini-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    margin-top:6px;
+  }
+  .mini-table th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--text-faint);
+    padding:8px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .mini-table td{
+    padding:10px 10px;
+    border-bottom:1px solid var(--line-soft);
+    color:var(--text-dim);
+    vertical-align:top;
+  }
+  .mini-table td:first-child{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--teal);
+    font-size:12.5px;
+    white-space:nowrap;
+  }
+  .mini-table tr:last-child td{ border-bottom:none; }
+
+  .rule-callout{
+    border-left:3px solid var(--amber);
+    background:rgba(255,180,84,0.07);
+    padding:14px 18px;
+    border-radius:6px;
+    font-size:14px;
+    line-height:1.6;
+    color:var(--text-dim);
+    margin:6px 0 20px;
+  }
+  .rule-callout strong{ color:var(--amber); }
+
+  .challenge-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-top:6px;
+  }
+  .challenge-item{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .challenge-item .ch-icon{ font-size:16px; flex-shrink:0; line-height:1.5; }
+  .challenge-item strong{
+    color:var(--text);
+    display:block;
+    margin-bottom:2px;
+    font-size:14px;
+  }
+  .challenge-item p{ color:var(--text-dim); font-size:13.5px; margin:0; }
+
+  .tech-groups{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px 24px;
+    margin:6px 0 4px;
+  }
+  @media (max-width:640px){ .tech-groups{ grid-template-columns:1fr; } }
+  .tech-groups > div{ display:flex; flex-direction:column; gap:4px; }
+
+  .feature-groups{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px 28px;
+    margin-top:6px;
+  }
+  @media (max-width:640px){ .feature-groups{ grid-template-columns:1fr; } }
+  .feature-group-title{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:6px;
+  }
+  .feature-list-single{ list-style:none; }
+  .feature-list-single li{
+    color:var(--text-dim);
+    font-size:13.5px;
+    padding:3px 0 3px 14px;
+    position:relative;
+  }
+  .feature-list-single li::before{
+    content:"–";
+    position:absolute; left:0;
+    color:var(--text-faint);
+  }
+
   /* ---------- EXPERIENCE ---------- */
   .exp-block{
     border-left:2px solid var(--teal-dim);
     padding-left:24px;
+    padding-bottom:32px;
     position:relative;
   }
+  .exp-block:last-child{ padding-bottom:0; }
   .exp-block::before{
     content:"";
     position:absolute;
@@ -724,6 +1004,8 @@
 </head>
 <body>
 
+<canvas id="dataStream" aria-hidden="true"></canvas>
+
 <nav>
   <div class="wrap">
     <div class="nav-logo"><img src="images/logo.jpg" alt="Klipert Tedlos logo" class="nav-logo-img">KLIPERT TEDLOS</div>
@@ -786,7 +1068,10 @@
         <ul class="info-list">
           <li><span>Location</span><span>Puerto Princesa City, Palawan, PH</span></li>
           <li><span>Phone</span><span>0991 323 4694</span></li>
+          <li><span>WhatsApp</span><span><a href="https://wa.me/639913234694" target="_blank" rel="noopener">0991 323 4694</a></span></li>
           <li><span>Email</span><span>klipertsky@gmail.com</span></li>
+          <li><span>Upwork</span><span><a href="https://www.upwork.com/freelancers/~015d1dee8aa67fd4ef?mp_source=share" target="_blank" rel="noopener">View Profile ↗</a></span></li>
+          <li><span>LinkedIn</span><span><a href="https://www.linkedin.com/in/klipert-tedlos/" target="_blank" rel="noopener">View Profile ↗</a></span></li>
           <li><span>Focus</span><span>GoHighLevel · AI Agents · Automation</span></li>
         </ul>
       </div>
@@ -834,7 +1119,20 @@
   <div class="wrap">
     <div class="section-head"><span class="tag mono">03</span><h2>AI Automation Projects</h2></div>
 
-    <div class="project featured">
+    <div class="carousel-tabs" id="aiTabs">
+      <button class="carousel-tab active" onclick="showSlide('ai',0)">★ Lead Routing</button>
+      <button class="carousel-tab" onclick="showSlide('ai',1)">Weather Monitoring</button>
+      <button class="carousel-tab" onclick="showSlide('ai',2)">FB Support Agent</button>
+      <button class="carousel-tab" onclick="showSlide('ai',3)">Local LLM</button>
+      <button class="carousel-tab" onclick="showSlide('ai',4)">Jobs Scraper</button>
+      <button class="carousel-tab" onclick="showSlide('ai',5)">Email Classification</button>
+      <button class="carousel-tab" onclick="showSlide('ai',6)">Shop-Floor Agent</button>
+      <button class="carousel-tab" onclick="showSlide('ai',7)">n8n → GitHub Sync</button>
+    </div>
+
+    <div class="carousel-track" id="ai-track">
+
+    <div class="project featured carousel-slide active">
       <div class="project-body">
         <div class="project-head">
           <div>
@@ -890,7 +1188,7 @@
       </div>
     </div>
 
-    <div class="project">
+    <div class="project carousel-slide">
       <div class="project-body">
         <div class="project-head">
           <h3>🌤️ AI-Powered Weather Monitoring, Reporting &amp; Error-Handling System</h3>
@@ -917,28 +1215,41 @@
       </div>
     </div>
 
-    <div class="project">
+    <div class="project carousel-slide">
       <div class="project-body">
         <div class="project-head">
-          <h3>AI-Powered Facebook Page Support Agent</h3>
+          <h3>💬 AI-Powered Facebook Page Support Agent</h3>
           <span class="project-type">n8n · personal project</span>
         </div>
+        <button class="case-study-btn" onclick="openModal('images/fb-support-agent.png')">⤢ View full case study</button>
         <ul>
-          <li>Designed an AI Agent connected to Facebook Messenger that answers customer questions using a knowledge base document stored in Google Drive.</li>
-          <li>Scoped agent responses to stay within the shop's knowledge base topics, ensuring accurate, on-brand answers to customer inquiries.</li>
-          <li>Tested end-to-end conversation flow from incoming Messenger query to AI-generated reply.</li>
+          <li>Built a Facebook Messenger support agent in n8n using a webhook trigger to receive Facebook's requests directly — verification handshakes (GET) and incoming customer messages (POST) — branching them through conditional logic so each is handled correctly.</li>
+          <li>Verification requests are responded to instantly; real customer messages are routed into an AI Agent that pulls context from a stored knowledge base document, keeping responses scoped to the shop's actual information instead of inventing answers.</li>
+          <li>The agent reasons over the retrieved knowledge using Google Gemini, with short-term memory maintaining context across the conversation so follow-up questions stay coherent.</li>
+          <li>The generated reply is sent straight back to the customer through the Facebook Graph API — completing the full receive → understand → respond loop inside a single automated workflow with no manual intervention.</li>
         </ul>
         <div class="mini-flow">
-          <span class="chip trigger">Messenger query</span>
+          <span class="chip trigger">Webhook (GET/POST)</span>
           <span class="arrow">→</span>
-          <span class="chip agent">AI agent + KB (Drive)</span>
+          <span class="chip">Verify vs. message</span>
           <span class="arrow">→</span>
-          <span class="chip">On-brand reply</span>
+          <span class="chip agent">AI Agent + Knowledge Base (Gemini)</span>
+          <span class="arrow">→</span>
+          <span class="chip">Reply via Graph API</span>
+        </div>
+        <div class="stack-row">
+          <span class="stack-label">Technology Stack:</span>
+          <span class="stack-chip">n8n</span>
+          <span class="stack-chip">Webhook</span>
+          <span class="stack-chip">Facebook Graph API</span>
+          <span class="stack-chip">Google Gemini</span>
+          <span class="stack-chip">Knowledge Base Retrieval</span>
+          <span class="stack-chip">Conversational Memory</span>
         </div>
       </div>
     </div>
 
-    <div class="project">
+    <div class="project carousel-slide">
       <div class="project-body">
         <div class="project-head">
           <h3>Local LLM Deployment &amp; Testing</h3>
@@ -958,7 +1269,7 @@
       </div>
     </div>
 
-    <div class="project">
+    <div class="project carousel-slide">
       <div class="project-body">
         <div class="project-head">
           <h3>AI Jobs Scraper + Automated Resume Optimizer</h3>
@@ -1012,6 +1323,246 @@
         </div>
       </div>
     </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>📩 AI-Powered Intelligent Email Classification &amp; Inbox Automation</h3>
+          <span class="project-type">n8n · personal project</span>
+        </div>
+        <button class="case-study-btn" onclick="openModal('images/email-classification.png')">⤢ View full case study</button>
+        <ul>
+          <li>An AI-powered email management automation built with n8n that automatically analyzes incoming Gmail messages and categorizes them based on their content, sender, and subject.</li>
+          <li>The workflow uses an LLM with structured output to classify emails into predefined categories such as Jobs, Personal, Shopping, Promotions, Newsletters, and General. A confidence-based decision layer ensures that uncertain classifications are routed to a Review Inbox instead of being automatically processed.</li>
+          <li>Once classified, the workflow uses conditional routing to apply the appropriate Gmail label, while selected categories can be automatically archived to keep the inbox organized.</li>
+          <li>Project summary: designed and implemented an AI-powered email classification system in n8n that automatically analyzes and organizes incoming Gmail messages — combining LLM-based classification, structured outputs, confidence scoring, conditional routing, Gmail labeling, and automated archiving to reduce inbox clutter while maintaining a manual review path for uncertain AI decisions.</li>
+        </ul>
+
+        <div class="mini-flow">
+          <span class="chip trigger">Gmail trigger</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">LLM classification (Gemini)</span>
+          <span class="arrow">→</span>
+          <span class="chip">Switch routing</span>
+          <span class="arrow">→</span>
+          <span class="chip">Label + archive</span>
+        </div>
+
+        <div class="capabilities-block">
+          <h4>Key Features</h4>
+          <ul class="feature-list">
+            <li>Automated Gmail email monitoring</li>
+            <li>AI-powered email classification</li>
+            <li>LLM-based contextual analysis</li>
+            <li>Structured JSON output</li>
+            <li>Confidence-based classification</li>
+            <li>Conditional routing with Switch nodes</li>
+            <li>Automatic Gmail labeling</li>
+            <li>Automatic email archiving</li>
+            <li>Low-confidence emails routed for manual review</li>
+          </ul>
+        </div>
+
+        <div class="stack-row">
+          <span class="stack-label">Technology Stack:</span>
+          <span class="stack-chip">n8n</span>
+          <span class="stack-chip">Gmail</span>
+          <span class="stack-chip">Google Gemini</span>
+          <span class="stack-chip">LLM</span>
+          <span class="stack-chip">Structured Output Parser</span>
+          <span class="stack-chip">JSON</span>
+          <span class="stack-chip">Conditional Logic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>🏭 Shop-Floor AI Agent</h3>
+          <span class="project-type">n8n · self-initiated project</span>
+        </div>
+        <p class="project-tagline">Grounded AI for Manufacturing Operations — a tool-calling agent that answers shop-floor questions from verified data only, and knows when to escalate to a human instead of guessing.</p>
+        <button class="case-study-btn" onclick="openModal('images/shop-floor-agent.png')">⤢ View full case study</button>
+
+        <div class="meta-grid">
+          <div><span class="meta-label">Role</span><span class="meta-value">AI Engineer (solo project)</span></div>
+          <div><span class="meta-label">Stack</span><span class="meta-value">n8n · Google Gemini · Tool-Calling Agent Architecture · Structured Data</span></div>
+          <div><span class="meta-label">Type</span><span class="meta-value">Self-initiated technical project, built to a real-world industry brief</span></div>
+        </div>
+
+        <div class="subsection-h4">The Problem</div>
+        <ul>
+          <li>Manufacturers running cabinet and panel production often keep production data — specs, workstation routing, standard operating procedures — disconnected from the actual shop floor, leaving operators without a fast way to confirm the right part, requirements, and next step.</li>
+          <li>A general-purpose AI answering manufacturing questions can confidently invent an answer it doesn't actually know — a machine setting, a tooling parameter, a safety step — which in production isn't a minor bug, it's a liability.</li>
+          <li>The real challenge wasn't "can an AI answer questions about parts" — it was whether an AI can answer reliably, cite its sources, and know when to stop and hand off to a human.</li>
+        </ul>
+
+        <div class="subsection-h4">The Approach</div>
+        <ul>
+          <li>Designed as a genuine tool-calling AI agent, not a single prompt or a scripted decision tree — at each step, the agent itself decides which of its tools it needs rather than following a fixed sequence, so it can handle real-world cases that weren't explicitly anticipated.</li>
+        </ul>
+        <div class="mini-flow">
+          <span class="chip trigger">Input</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">Decide</span>
+          <span class="arrow">→</span>
+          <span class="chip">Call tool</span>
+          <span class="arrow">→</span>
+          <span class="chip">Read result</span>
+          <span class="arrow">→</span>
+          <span class="chip">Decide next step</span>
+          <span class="arrow">→</span>
+          <span class="chip">Respond</span>
+        </div>
+
+        <div class="subsection-h4">The Agent's Tools</div>
+        <table class="mini-table">
+          <tr><th>Tool</th><th>What it does</th></tr>
+          <tr><td>get_panel</td><td>Retrieves verified part specs — dimensions, material, required operation.</td></tr>
+          <tr><td>get_workstation_requirements</td><td>Checks what a workstation is actually equipped to handle.</td></tr>
+          <tr><td>search_sop</td><td>Pulls relevant procedure instructions from stored documentation.</td></tr>
+          <tr><td>record_event</td><td>Logs every scan, question, and decision for traceability.</td></tr>
+          <tr><td>escalate_to_supervisor</td><td>Triggers a human handoff whenever data can't safely support an answer.</td></tr>
+        </table>
+
+        <div class="subsection-h4">The Core Design Rule</div>
+        <div class="rule-callout">
+          <strong>Grounding rule:</strong> the agent is instructed to never state a fact it didn't retrieve from a tool, and to cite its source on every answer (e.g. "Source: Panel P-1002"). If the underlying data doesn't support an answer, the agent doesn't guess — it escalates. This single rule is what separates a usable production tool from a demo.
+        </div>
+
+        <div class="subsection-h4">Engineering Challenges (and how I solved them)</div>
+        <ul class="challenge-list">
+          <li class="challenge-item">
+            <span class="ch-icon">🔁</span>
+            <span><strong>Infinite tool-call loop.</strong><p>The agent kept looping until it hit the system's iteration cap. Root cause: one tool was misconfigured to update records instead of insert new ones, so it silently failed every time it ran — and the agent kept retrying a call that could never succeed. Fixed the operation type and added explicit "call once" logic to the agent's instructions.</p></span>
+          </li>
+          <li class="challenge-item">
+            <span class="ch-icon">🔍</span>
+            <span><strong>Search returning nothing.</strong><p>A filter misconfiguration caused a lookup tool to treat the operator's actual question as a database column name instead of a search value — a subtle bug that quietly broke retrieval. Fixed by correcting which field the AI was allowed to control.</p></span>
+          </li>
+          <li class="challenge-item">
+            <span class="ch-icon">⚠️</span>
+            <span><strong>False-positive confirmations.</strong><p>Early on, an unfiltered lookup tool returned all records regardless of input — meaning even a completely invalid part code got "confirmed." Fixed by adding a strict exact-match condition, so unknown inputs correctly return nothing.</p></span>
+          </li>
+          <li class="challenge-item">
+            <span class="ch-icon">📦</span>
+            <span><strong>Unstructured output.</strong><p>Free-text AI responses are hard to route reliably. Added a structured output schema (status, message, source, escalation flag) so the workflow can branch cleanly instead of parsing prose.</p></span>
+          </li>
+        </ul>
+
+        <div class="subsection-h4">Results</div>
+        <table class="mini-table">
+          <tr><th>Scenario</th><th>Outcome</th></tr>
+          <tr><td>Correct part, correct workstation</td><td>✅ Verified, grounded instructions returned with source</td></tr>
+          <tr><td>Part sent to wrong workstation</td><td>✅ Mismatch caught, processing blocked, correct workstation named</td></tr>
+          <tr><td>Question outside available data</td><td>✅ No hallucination — escalated to supervisor</td></tr>
+          <tr><td>Unknown/invalid part code</td><td>✅ Clean "not found" response, nothing invented</td></tr>
+          <tr><td>Conflicting physical vs. system data</td><td>✅ Recognized as unsafe to resolve, escalated automatically</td></tr>
+        </table>
+
+        <div class="subsection-h4">What This Project Demonstrates</div>
+        <ul class="feature-list">
+          <li>Designing genuine agentic reasoning, not a scripted pipeline disguised as one</li>
+          <li>Treating "I don't know — escalating" as a correct, first-class outcome rather than a failure</li>
+          <li>Debugging AI agent behavior methodically — using execution traces to find root causes, not guessing</li>
+          <li>Choosing the simplest architecture that actually works — no vector databases, no multi-agent complexity, no unnecessary infrastructure</li>
+        </ul>
+
+        <div class="stack-row">
+          <span class="stack-label">Technology Stack:</span>
+          <span class="stack-chip">n8n</span>
+          <span class="stack-chip">Google Gemini</span>
+          <span class="stack-chip">Tool-Calling Agent Architecture</span>
+          <span class="stack-chip">Structured Data</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>🔄 n8n → GitHub Sync — Automated Workflow Version Control</h3>
+          <span class="project-type">Full-stack app · personal project</span>
+        </div>
+        <p class="project-tagline">A full-stack sync application that keeps self-hosted n8n workflows version-controlled in GitHub — automatically, with full diff and audit visibility.</p>
+        <button class="case-study-btn" onclick="openModal('images/n8n-github-sync.png')">⤢ View full case study</button>
+
+        <ul>
+          <li>Developed a full-stack n8n workflow synchronization application that connects self-hosted n8n instances to GitHub through the n8n REST API and GitHub API.</li>
+          <li>The application automatically detects workflow changes, exports workflow JSON, commits updates to a GitHub repository, and provides change visibility through a diff viewer and audit log.</li>
+        </ul>
+
+        <div class="mini-flow">
+          <span class="chip trigger">n8n workflow change</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">n8n REST API export</span>
+          <span class="arrow">→</span>
+          <span class="chip">Diff + Git commit</span>
+          <span class="arrow">→</span>
+          <span class="chip">GitHub repo (versioned)</span>
+        </div>
+
+        <div class="subsection-h4">Key Features</div>
+        <div class="feature-groups">
+          <div class="feature-group">
+            <div class="feature-group-title">🔄 Automated Sync</div>
+            <ul class="feature-list-single">
+              <li>Synchronizes n8n workflows with GitHub</li>
+              <li>Supports webhook-triggered and background synchronization</li>
+              <li>Converts workflow changes into Git commits</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <div class="feature-group-title">📂 Git-Based Version Control</div>
+            <ul class="feature-list-single">
+              <li>Stores workflow JSON in GitHub</li>
+              <li>Maintains workflow history</li>
+              <li>Allows previous versions to be reviewed or restored through Git</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <div class="feature-group-title">🔍 Diff Viewer</div>
+            <ul class="feature-list-single">
+              <li>Compares the current n8n workflow against the GitHub version</li>
+              <li>Makes workflow changes easier to identify</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <div class="feature-group-title">📋 Audit Logging</div>
+            <ul class="feature-list-single">
+              <li>Records synchronization events</li>
+              <li>Tracks commit timestamps and synchronization sources</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <div class="feature-group-title">🐳 Docker Deployment</div>
+            <ul class="feature-list-single">
+              <li>Containerized development environment</li>
+              <li>Node.js + Docker Compose</li>
+              <li>Works with self-hosted n8n</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subsection-h4">Technology Stack</div>
+        <div class="tech-groups">
+          <div><span class="meta-label">Frontend</span><span class="meta-value">React · Vite · Tailwind CSS · Lucide React</span></div>
+          <div><span class="meta-label">Backend</span><span class="meta-value">Node.js · Express · TypeScript · n8n REST API</span></div>
+          <div><span class="meta-label">Integrations</span><span class="meta-value">GitHub API · n8n API</span></div>
+          <div><span class="meta-label">Infrastructure</span><span class="meta-value">Docker / Docker Compose</span></div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="carousel-arrows">
+      <button class="carousel-arrow" onclick="stepSlide('ai',-1)">← Prev</button>
+      <span class="carousel-counter" id="ai-counter">1 / 8</span>
+      <button class="carousel-arrow" onclick="stepSlide('ai',1)">Next →</button>
+    </div>
+
   </div>
 </section>
 
@@ -1019,7 +1570,17 @@
   <div class="wrap">
     <div class="section-head"><span class="tag mono">04</span><h2>GoHighLevel Projects</h2></div>
 
-    <div class="project">
+    <div class="carousel-tabs" id="ghlTabs">
+      <button class="carousel-tab active" onclick="showSlide('ghl',0)">Landing Page</button>
+      <button class="carousel-tab" onclick="showSlide('ghl',1)">Customer Nurture</button>
+      <button class="carousel-tab" onclick="showSlide('ghl',2)">Review Automation</button>
+      <button class="carousel-tab" onclick="showSlide('ghl',3)">Course Creation</button>
+      <button class="carousel-tab" onclick="showSlide('ghl',4)">Cold Outreach</button>
+    </div>
+
+    <div class="carousel-track" id="ghl-track">
+
+    <div class="project carousel-slide active">
       <div class="project-body">
         <div class="project-head">
           <h3>Local Service Business Landing Page</h3>
@@ -1048,6 +1609,212 @@
         </div>
       </div>
     </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>🛒 eCommerce Customer Nurture &amp; Retention System</h3>
+          <span class="project-type">GoHighLevel · self-initiated project</span>
+        </div>
+        <p class="project-tagline">Built in GoHighLevel — automatically re-engages customers the moment they abandon checkout, with zero manual intervention.</p>
+        <button class="case-study-btn" onclick="openModal('images/ecommerce-nurture.webp')">⤢ View full case study</button>
+
+        <div class="subsection-h4">The Problem</div>
+        <ul>
+          <li>Online stores lose a significant share of revenue to abandoned checkouts — customers who start the buying process but drop off before completing payment. Without automated follow-up, that revenue is simply gone.</li>
+        </ul>
+
+        <div class="subsection-h4">The Solution</div>
+        <ul>
+          <li>Built an automated nurture and retention workflow in GoHighLevel that re-engages customers the moment they abandon checkout — without any manual intervention from the business owner.</li>
+        </ul>
+
+        <div class="subsection-h4">How It Works</div>
+        <ul>
+          <li>Triggers automatically the instant a checkout is abandoned.</li>
+          <li>Waits a short window (1 hour) to avoid feeling intrusive, then sends a discount code email to incentivize completion.</li>
+          <li>If the customer still hasn't converted after a day, the workflow continues nurturing with further automated outreach.</li>
+          <li>The entire sequence exits automatically the moment an order is completed — so customers never receive irrelevant follow-ups after they've already purchased.</li>
+        </ul>
+
+        <div class="mini-flow">
+          <span class="chip trigger">Abandoned checkout</span>
+          <span class="arrow">→</span>
+          <span class="chip">Wait 1hr</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">Discount code email</span>
+          <span class="arrow">→</span>
+          <span class="chip">Wait 1 day</span>
+          <span class="arrow">→</span>
+          <span class="chip">Continued nurture</span>
+          <span class="arrow">→</span>
+          <span class="chip">Goal: order complete (exit)</span>
+        </div>
+
+        <div class="subsection-h4">Impact</div>
+        <ul>
+          <li>This kind of automation typically recovers a meaningful percentage of otherwise-lost sales, running entirely passively in the background — no manual tracking, no missed follow-ups, and a clean customer experience that adapts in real time to whether the sale actually closes.</li>
+        </ul>
+
+        <div class="stack-row">
+          <span class="stack-label">Built With:</span>
+          <span class="stack-chip">GoHighLevel Workflow Automation</span>
+          <span class="stack-chip">Goal-based Exit Logic</span>
+          <span class="stack-chip">Multi-step Delayed Email Sequencing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>⭐ Review Request Automation</h3>
+          <span class="project-type">GoHighLevel · self-initiated project</span>
+        </div>
+        <p class="project-tagline">Built in GoHighLevel — a multi-channel review request system that adapts based on how the customer actually responds, not a single blast email.</p>
+        <button class="case-study-btn" onclick="openModal('images/review-automation.webp')">⤢ View full case study</button>
+
+        <div class="subsection-h4">The Problem</div>
+        <ul>
+          <li>Businesses lose out on positive reviews simply because asking for them manually is inconsistent — and worse, an unhappy customer asked for a public review at the wrong moment can turn into reputational damage instead of growth.</li>
+        </ul>
+
+        <div class="subsection-h4">The Solution</div>
+        <ul>
+          <li>Built a multi-channel review request automation that adapts based on how the customer actually responds — not just a single blast email.</li>
+        </ul>
+
+        <div class="subsection-h4">How It Works</div>
+        <ul>
+          <li>Sends an automated review request email after a service/purchase.</li>
+          <li>If the customer doesn't respond within a day, the system automatically follows up via SMS instead of giving up — and repeats the reply/timeout logic again to maximize response rate across channels.</li>
+          <li>When a customer does reply, the workflow reads their rating response and branches intelligently: high ratings (4-5) are routed to leave a public review, capturing positive word-of-mouth, while low ratings (1-3) are routed to a private feedback flow instead — protecting the business's public reputation while still capturing the complaint for follow-up.</li>
+          <li>Non-responders are cleanly exited from the sequence rather than spammed indefinitely.</li>
+        </ul>
+
+        <div class="mini-flow">
+          <span class="chip trigger">Review request email</span>
+          <span class="arrow">→</span>
+          <span class="chip">No reply → SMS follow-up</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">Rating branch</span>
+          <span class="arrow">→</span>
+          <span class="chip">4-5: public review</span>
+          <span class="arrow">→</span>
+          <span class="chip">1-3: private feedback</span>
+        </div>
+
+        <div class="subsection-h4">Impact</div>
+        <ul>
+          <li>This turns review generation from a manual, inconsistent task into a fully automated system that increases positive review volume while actively filtering out public negative reviews — a direct, measurable reputation and revenue lever for local/service businesses.</li>
+        </ul>
+
+        <div class="stack-row">
+          <span class="stack-label">Built With:</span>
+          <span class="stack-chip">GoHighLevel Workflow Automation</span>
+          <span class="stack-chip">Conditional Branching Logic</span>
+          <span class="stack-chip">Multi-Channel Follow-Up (Email + SMS)</span>
+          <span class="stack-chip">Sentiment-Based Routing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>🎓 Course Creation — Free 7-Day Google Ads Course</h3>
+          <span class="project-type">GoHighLevel · Upwork portfolio piece</span>
+        </div>
+        <p class="project-tagline">Empower your business with online learning and digital product delivery — all inside GoHighLevel. Published to my Upwork portfolio on Oct 23, 2025.</p>
+        <div class="button-row">
+          <button class="case-study-btn" onclick="openModal('images/course-creation.png')">⤢ View full case study</button>
+          <a class="case-study-btn" href="https://www.upwork.com/freelancers/~015d1dee8aa67fd4ef?p=1981032034910560256" target="_blank" rel="noopener">↗ View on Upwork</a>
+        </div>
+        <ul>
+          <li>The Course Creation feature allows you to build, host, and sell your own online courses, membership programs, and training content without needing third-party platforms.</li>
+          <li>Example build shown: a free 7-day Google Ads course with a lead-capture checkout (email + name), delivered entirely through a GoHighLevel-hosted course portal — no external LMS or checkout tool required.</li>
+        </ul>
+        <div class="mini-flow">
+          <span class="chip trigger">Lead opt-in (email + name)</span>
+          <span class="arrow">→</span>
+          <span class="chip">Checkout / enrollment</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">Course access granted</span>
+          <span class="arrow">→</span>
+          <span class="chip">Hosted lesson delivery</span>
+        </div>
+        <div class="stack-row">
+          <span class="stack-label">Skills &amp; Deliverables:</span>
+          <span class="stack-chip">GoHighLevel</span>
+          <span class="stack-chip">Course / Membership Builder</span>
+          <span class="stack-chip">Lead Capture Forms</span>
+          <span class="stack-chip">Digital Product Delivery</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project carousel-slide">
+      <div class="project-body">
+        <div class="project-head">
+          <h3>📧 Cold Email + SMS Outreach Campaign Workflow</h3>
+          <span class="project-type">GoHighLevel · Upwork portfolio piece</span>
+        </div>
+        <p class="project-tagline">Turns cold contacts into engaged leads by automatically escalating from email, to SMS, to a real human — so no opportunity ever goes quiet. Published to my Upwork portfolio on Oct 21, 2025.</p>
+        <button class="case-study-btn" onclick="openModal('images/cold-outreach.png')">⤢ View full case study</button>
+
+        <div class="subsection-h4">The Problem</div>
+        <ul>
+          <li>Most cold outreach dies after a single unanswered email. There's no consistent system forcing a second touch, a third channel, or a human follow-up — so promising leads go quiet and get written off, not because they weren't interested, but because nobody followed up again.</li>
+        </ul>
+
+        <div class="subsection-h4">The Solution</div>
+        <ul>
+          <li>Built a multi-touch, multi-channel outreach workflow in GoHighLevel that automatically escalates engagement — starting with email, moving to SMS if there's no response, and finally assigning a manual task to a team member if the contact still hasn't engaged. Every cold contact gets multiple genuine touches before ever being written off.</li>
+        </ul>
+
+        <div class="subsection-h4">How It Works</div>
+        <ul>
+          <li>Triggers automatically the moment a contact is tagged for cold outreach — no manual list-building or manual sending required.</li>
+          <li>Sends a personalized intro email, then waits a couple of days to give the contact room to respond naturally rather than feeling spammed.</li>
+          <li>If there's no engagement, the workflow automatically sends a follow-up email and, when that also goes unanswered, escalates to an SMS touch — meeting the lead on a channel they're more likely to actually see.</li>
+          <li>If the contact still hasn't responded after SMS, a task is automatically assigned to a team member — so high-value leads never fall through the cracks of pure automation; a real person steps in exactly when it matters.</li>
+        </ul>
+
+        <div class="mini-flow">
+          <span class="chip trigger">Cold-outreach tag</span>
+          <span class="arrow">→</span>
+          <span class="chip">Intro email</span>
+          <span class="arrow">→</span>
+          <span class="chip">Wait 2 days</span>
+          <span class="arrow">→</span>
+          <span class="chip agent">No response → SMS</span>
+          <span class="arrow">→</span>
+          <span class="chip">Still no response → manual task</span>
+        </div>
+
+        <div class="subsection-h4">Impact</div>
+        <ul>
+          <li>Turns a one-and-done outreach effort into a persistent, multi-touch sequence that maximizes response rate without any extra manual work — and guarantees that even contacts who don't respond to automation still get a real human follow-up, so no lead is ever silently lost.</li>
+        </ul>
+
+        <div class="stack-row">
+          <span class="stack-label">Skills &amp; Deliverables:</span>
+          <span class="stack-chip">GoHighLevel</span>
+          <span class="stack-chip">Automated Workflow</span>
+          <span class="stack-chip">Conditional Time-Out Logic</span>
+          <span class="stack-chip">Multi-Channel Sequencing (Email + SMS)</span>
+          <span class="stack-chip">Automated Task Assignment</span>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="carousel-arrows">
+      <button class="carousel-arrow" onclick="stepSlide('ghl',-1)">← Prev</button>
+      <span class="carousel-counter" id="ghl-counter">1 / 5</span>
+      <button class="carousel-arrow" onclick="stepSlide('ghl',1)">Next →</button>
+    </div>
   </div>
 </section>
 
@@ -1056,15 +1823,51 @@
     <div class="section-head"><span class="tag mono">05</span><h2>Experience</h2></div>
     <div class="exp-block">
       <div class="exp-role">
-        <h3>Freelance GoHighLevel Virtual Assistant</h3>
-        <span>Remote</span>
+        <h3>GoHighLevel Automation Training &amp; Internship</h3>
+        <span>Aug – Sep 2025 · Remote · CRM &amp; Marketing Automation</span>
       </div>
       <ul>
-        <li>Built custom pipelines to manage leads and sales processes.</li>
-        <li>Created automation workflows to handle email responses, lead follow-up, and tagging.</li>
-        <li>Developed branded forms integrated with calendars and workflows.</li>
-        <li>Managed contacts and applied tagging for better segmentation and automation.</li>
-        <li>Set up membership/course areas and internal communities for client training and coaching programs.</li>
+        <li>Completed hands-on GoHighLevel training and internship focused on CRM and marketing automation.</li>
+        <li>Configured CRM pipelines, workflows, forms, calendars, contacts, and tagging/segmentation.</li>
+        <li>Built and tested lead-management and follow-up workflows.</li>
+        <li>Assisted with membership/course area and community setup.</li>
+        <li>Practiced workflow testing and troubleshooting.</li>
+      </ul>
+    </div>
+
+    <div class="exp-block">
+      <div class="exp-role">
+        <h3>Operations Supervisor — Trucking Business</h3>
+        <span>2021 – 2024</span>
+      </div>
+      <ul>
+        <li>Coordinated daily business operations, schedules, and task execution.</li>
+        <li>Communicated with drivers, customers, and stakeholders to resolve operational requirements and issues.</li>
+        <li>Monitored activities, maintained records, and handled time-sensitive operational problems.</li>
+      </ul>
+    </div>
+
+    <div class="exp-block">
+      <div class="exp-role">
+        <h3>Marine Deck Officer</h3>
+        <span>2015 – 2021</span>
+      </div>
+      <ul>
+        <li>Managed responsibilities in a structured, procedure-driven operational environment.</li>
+        <li>Coordinated with crew members, maintained records, and followed established procedures and schedules.</li>
+        <li>Responded to unexpected situations and made timely decisions under pressure.</li>
+      </ul>
+    </div>
+
+    <div class="exp-block">
+      <div class="exp-role">
+        <h3>IT &amp; Technical Support Experience</h3>
+        <span>2009 – 2012</span>
+      </div>
+      <ul>
+        <li>Provided computer hardware and software troubleshooting, including Windows, network, and printer issues.</li>
+        <li>Assisted users with technical problems and basic network configuration.</li>
+        <li>Supported digital content production, document preparation, and other computer-based tasks.</li>
       </ul>
     </div>
   </div>
@@ -1119,8 +1922,12 @@
       <h2>Let's automate something.</h2>
       <p>If your team is losing time to manual follow-ups, scattered leads, or repetitive admin work, I can help you wire it into a system that runs itself.</p>
       <div class="contact-links">
-        <a class="btn btn-primary" href="mailto:klipertsky@gmail.com">klipertsky@gmail.com</a>
+        <button class="btn btn-primary" onclick="openBooking()">📅 Book a Discovery Call</button>
+        <a class="btn btn-ghost" href="mailto:klipertsky@gmail.com">klipertsky@gmail.com</a>
         <a class="btn btn-ghost" href="tel:09913234694">0991 323 4694</a>
+        <a class="btn btn-ghost" href="https://wa.me/639913234694" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a class="btn btn-ghost" href="https://www.upwork.com/freelancers/~015d1dee8aa67fd4ef?mp_source=share" target="_blank" rel="noopener">↗ Upwork</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/klipert-tedlos/" target="_blank" rel="noopener">↗ LinkedIn</a>
       </div>
     </div>
     <div class="foot-note">Klipert Tedlos — GoHighLevel Specialist · AI Automation Specialist</div>
@@ -1132,7 +1939,110 @@
   <img class="modal-img" id="modalImg" src="" alt="Full case study screenshot">
 </div>
 
+<div class="booking-overlay" id="bookingModal" onclick="if(event.target===this) closeBooking()">
+  <div class="booking-box">
+    <div class="booking-box-header">
+      <span>📅 Book a Discovery Call</span>
+      <button class="booking-close" onclick="closeBooking()">✕ Close</button>
+    </div>
+    <iframe class="booking-frame" id="bookingFrame" src="" title="Book a discovery call with Klipert Tedlos"></iframe>
+    <div class="booking-fallback">
+      Having trouble loading? <a href="https://calendar.app.google/EhFHrdL7HdQPDr247" target="_blank" rel="noopener">Open the booking page in a new tab →</a>
+    </div>
+  </div>
+</div>
+
 <script>
+  (function(){
+    const canvas = document.getElementById('dataStream');
+    if(!canvas) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = canvas.getContext('2d');
+    let width, height, nodes;
+    const NODE_COUNT = 46;
+    const MAX_DIST = 150;
+    const COLORS = ['45,212,191', '255,180,84'];
+
+    function resize(){
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    function makeNodes(){
+      nodes = [];
+      for(let i=0; i<NODE_COUNT; i++){
+        nodes.push({
+          x: Math.random()*width,
+          y: Math.random()*height,
+          vx: (Math.random()-0.5)*0.15,
+          vy: (Math.random()-0.5)*0.15,
+          r: Math.random()*1.2+0.8,
+          phase: Math.random()*Math.PI*2,
+          color: COLORS[Math.floor(Math.random()*COLORS.length)]
+        });
+      }
+    }
+
+    window.addEventListener('resize', function(){
+      resize();
+    });
+    resize();
+    makeNodes();
+
+    let t = 0;
+    function step(){
+      if(!document.hidden){
+        t += 0.01;
+        ctx.clearRect(0, 0, width, height);
+
+        for(let i=0; i<nodes.length; i++){
+          const n = nodes[i];
+          n.x += n.vx;
+          n.y += n.vy;
+          if(n.x < 0 || n.x > width) n.vx *= -1;
+          if(n.y < 0 || n.y > height) n.vy *= -1;
+        }
+
+        for(let i=0; i<nodes.length; i++){
+          for(let j=i+1; j<nodes.length; j++){
+            const a = nodes[i], b = nodes[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist < MAX_DIST){
+              const alpha = (1 - dist/MAX_DIST) * 0.12;
+              ctx.strokeStyle = 'rgba(' + a.color + ',' + alpha + ')';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        for(let i=0; i<nodes.length; i++){
+          const n = nodes[i];
+          const pulse = 0.5 + 0.5*Math.sin(t*1.5 + n.phase);
+          const alpha = 0.25 + pulse*0.35;
+          const radius = n.r + pulse*0.6;
+
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, radius*2.4, 0, Math.PI*2);
+          ctx.fillStyle = 'rgba(' + n.color + ',' + (alpha*0.12) + ')';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, radius, 0, Math.PI*2);
+          ctx.fillStyle = 'rgba(' + n.color + ',' + alpha + ')';
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+
   function openModal(src){
     document.getElementById('modalImg').src = src;
     document.getElementById('imgModal').classList.add('open');
@@ -1143,8 +2053,39 @@
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') closeModal();
+    if(e.key === 'Escape'){ closeModal(); closeBooking(); }
   });
+
+  function openBooking(){
+    document.getElementById('bookingFrame').src = 'https://calendar.app.google/EhFHrdL7HdQPDr247';
+    document.getElementById('bookingModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeBooking(){
+    document.getElementById('bookingModal').classList.remove('open');
+    document.getElementById('bookingFrame').src = '';
+    document.body.style.overflow = '';
+  }
+
+  const carouselState = {};
+  function showSlide(name, index){
+    const track = document.getElementById(name + '-track');
+    const slides = track.querySelectorAll('.carousel-slide');
+    const total = slides.length;
+    const i = ((index % total) + total) % total;
+    slides.forEach((el, idx) => el.classList.toggle('active', idx === i));
+    const tabsWrap = document.getElementById(name + 'Tabs');
+    if(tabsWrap){
+      tabsWrap.querySelectorAll('.carousel-tab').forEach((el, idx) => el.classList.toggle('active', idx === i));
+    }
+    carouselState[name] = i;
+    const counter = document.getElementById(name + '-counter');
+    if(counter) counter.textContent = (i + 1) + ' / ' + total;
+  }
+  function stepSlide(name, dir){
+    const current = carouselState[name] || 0;
+    showSlide(name, current + dir);
+  }
 </script>
 
 </body>
